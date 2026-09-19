@@ -16,6 +16,7 @@ interface Props {
   onPrefixPolicy: () => void;
   onAddressAudit: () => void;
   onRouteSummary: () => void;
+  onPlanDiff: () => void;
 }
 
 export default function Toolbar(props: Props) {
@@ -67,6 +68,13 @@ export default function Toolbar(props: Props) {
           title="勾选子网并限定最多路由条数，以 CIDR 树生成不跨根网段、不覆盖未选分配的最优汇总方案（只读，不修改规划）"
         >
           路由汇总
+        </button>
+        <button
+          className="btn"
+          onClick={props.onPlanDiff}
+          title="导入「导出 JSON」生成的基线文件，按分配 id 对比新增/删除/重命名/类型变化/迁移/容量变化，并对地址并集差集压缩出最少 CIDR 的新增占用与释放地址（只读，冲突锁定期间可用）"
+        >
+          规划差异报告
         </button>
         <span className="divider" />
         <button className="btn" onClick={props.onExport}>

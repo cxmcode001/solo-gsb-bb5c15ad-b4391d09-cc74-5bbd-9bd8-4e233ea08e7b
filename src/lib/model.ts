@@ -165,47 +165,60 @@ export function validatePlan(plan: Plan): string[] {
 
 /** 解析并校验导入的 JSON。成功返回 Plan，失败抛出带中文信息的 Error。 */
 export function parsePlanJson(text: string): Plan {
+  const parsed = parsePlanJsonChecked(text);
+  if (!parsed.ok) throw new Error(parsed.errors.join('\n'));
+  return parsed.plan;
+}
+
+/**
+ * 解析并完整校验 JSON（与「导入 JSON」走同一套 Plan 校验）。
+ * 结构化返回：ok=false 时携带逐条错误信息，供只读工具展示而不生成结果。
+ */
+export function parsePlanJsonChecked(text: string): { ok: true; plan: Plan } | { ok: false; errors: string[] } {
   let raw: unknown;
   try {
     raw = JSON.parse(text);
   } catch {
-    throw new Error('JSON 解析失败：文件不是合法 JSON');
+    return { ok: false, errors: ['JSON 解析失败：文件不是合法 JSON'] };
   }
-  if (typeof raw !== 'object' || raw === null) throw new Error('规划文件格式错误：顶层应为对象');
+  if (typeof raw !== 'object' || raw === null) return { ok: false, errors: ['规划文件格式错误：顶层应为对象'] };
   const obj = raw as Record<string, unknown>;
   if (!Array.isArray(obj.roots) || !Array.isArray(obj.allocations)) {
-    throw new Error('规划文件格式错误：缺少 roots / allocations 数组');
+    return { ok: false, errors: ['规划文件格式错误：缺少 roots / allocations 数组'] };
   }
-  const plan: Plan = {
-    version: PLAN_VERSION,
-    roots: (obj.roots as unknown[]).map((r, i) => {
-      const o = r as Record<string, unknown>;
-      if (typeof o?.cidr !== 'string') throw new Error(`roots[${i}] 缺少 cidr 字符串`);
-      return {
-        id: typeof o.id === 'string' ? o.id : newId('root'),
-        name: typeof o.name === 'string' ? o.name : '',
-        cidr: o.cidr,
-      };
-    }),
-    allocations: (obj.allocations as unknown[]).map((a, i) => {
-      const o = a as Record<string, unknown>;
-      if (typeof o?.cidr !== 'string') throw new Error(`allocations[${i}] 缺少 cidr 字符串`);
-      const c = parseCidr(o.cidr);
-      return {
-        id: typeof o.id === 'string' ? o.id : newId('alloc'),
-        name: typeof o.name === 'string' ? o.name : '',
-        kind: o.kind === 'reserved' ? 'reserved' : 'subnet',
-        prefix: typeof o.prefix === 'number' ? o.prefix : c ? c.prefix : 0,
-        cidr: o.cidr,
-        note: typeof o.note === 'string' ? o.note : undefined,
-      };
-    }),
-  };
+  let plan: Plan;
+  try {
+    plan = {
+      version: PLAN_VERSION,
+      roots: (obj.roots as unknown[]).map((r, i) => {
+        const o = r as Record<string, unknown>;
+        if (typeof o?.cidr !== 'string') throw new Error(`roots[${i}] 缺少 cidr 字符串`);
+        return {
+          id: typeof o.id === 'string' ? o.id : newId('root'),
+          name: typeof o.name === 'string' ? o.name : '',
+          cidr: o.cidr,
+        };
+      }),
+      allocations: (obj.allocations as unknown[]).map((a, i) => {
+        const o = a as Record<string, unknown>;
+        if (typeof o?.cidr !== 'string') throw new Error(`allocations[${i}] 缺少 cidr 字符串`);
+        const c = parseCidr(o.cidr);
+        return {
+          id: typeof o.id === 'string' ? o.id : newId('alloc'),
+          name: typeof o.name === 'string' ? o.name : '',
+          kind: o.kind === 'reserved' ? 'reserved' : 'subnet',
+          prefix: typeof o.prefix === 'number' ? o.prefix : c ? c.prefix : 0,
+          cidr: o.cidr,
+          note: typeof o.note === 'string' ? o.note : undefined,
+        };
+      }),
+    };
+  } catch (e) {
+    return { ok: false, errors: [(e as Error).message] };
+  }
   const errors = validatePlan(plan);
-  if (errors.length > 0) {
-    throw new Error(`规划文件校验未通过：\n${errors.map((e) => `· ${e}`).join('\n')}`);
-  }
-  return plan;
+  if (errors.length > 0) return { ok: false, errors: ['规划文件校验未通过：', ...errors.map((e) => `· ${e}`)] };
+  return { ok: true, plan };
 }
 
 export function serializePlan(plan: Plan): string {

@@ -783,3 +783,146 @@ tr.summary-reserved-row td {
   z-index: 400;
   font-size: 14px;
 }
+
+/* ---- 规划差异报告 ---- */
+.diff-count {
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.diff-tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  margin: 1px 3px 1px 0;
+  border-radius: 10px;
+  white-space: nowrap;
+  background: rgba(139, 150, 173, 0.15);
+  color: var(--muted);
+}
+
+.diff-tag.diff-added,
+.diff-count.diff-added,
+.diff-addr-list.diff-added h5 {
+  color: var(--green);
+}
+
+.diff-tag.diff-added {
+  background: rgba(52, 201, 142, 0.15);
+}
+
+.diff-tag.diff-removed,
+.diff-count.diff-removed,
+.diff-addr-list.diff-removed h5 {
+  color: var(--red);
+}
+
+.diff-tag.diff-removed {
+  background: rgba(229, 96, 94, 0.18);
+}
+
+.diff-tag.diff-renamed,
+.diff-count.diff-renamed {
+  color: #c9a0ff;
+}
+
+.diff-tag.diff-renamed {
+  background: rgba(186, 130, 255, 0.18);
+}
+
+.diff-tag.diff-kind,
+.diff-count.diff-kind {
+  color: #e89b5e;
+}
+
+.diff-tag.diff-kind {
+  background: rgba(232, 155, 94, 0.16);
+}
+
+.diff-tag.diff-migrated,
+.diff-count.diff-migrated {
+  color: var(--yellow);
+}
+
+.diff-tag.diff-migrated {
+  background: rgba(232, 185, 63, 0.15);
+}
+
+.diff-tag.diff-resized,
+.diff-count.diff-resized {
+  color: #8db4ff;
+}
+
+.diff-tag.diff-resized {
+  background: rgba(79, 140, 255, 0.18);
+}
+
+.diff-addr-summary {
+  margin: 8px 0 4px;
+  font-size: 13px;
+}
+
+.diff-addr-summary span {
+  display: inline-block;
+  margin-right: 18px;
+}
+
+.diff-addr-cols {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.diff-addr-list {
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.diff-addr-list h5 {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.diff-addr-list ul {
+  margin: 6px 0;
+  padding-left: 0;
+  list-style: none;
+  max-height: 260px;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+
+.diff-addr-list li {
+  padding: 1px 0;
+}
+
+.diff-stale {
+  margin-bottom: 8px;
+  font-size: 12.5px;
+  color: var(--yellow);
+}
+
+.diff-stale .btn {
+  margin-left: 8px;
+}
+
+.diff-errors {
+  margin-top: 10px;
+}
+
+.diff-row.diff-removed td {
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .diff-addr-cols {
+    flex-direction: column;
+  }
+}
