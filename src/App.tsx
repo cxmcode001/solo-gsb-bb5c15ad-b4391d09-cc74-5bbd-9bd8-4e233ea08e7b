@@ -38,6 +38,7 @@ import RouteSummaryModal from './components/RouteSummaryModal';
 import ConflictModal from './components/ConflictModal';
 import CryptoBackupModal from './components/CryptoBackupModal';
 import BatchApplyModal from './components/BatchApplyModal';
+import PlanDiffModal from './components/PlanDiffModal';
 
 interface MigrationRequest {
   title: string;
@@ -82,6 +83,7 @@ export default function App() {
   const [prefixPolicyOpen, setPrefixPolicyOpen] = useState(false);
   const [addressAuditOpen, setAddressAuditOpen] = useState(false);
   const [routeSummaryOpen, setRouteSummaryOpen] = useState(false);
+  const [planDiffOpen, setPlanDiffOpen] = useState(false);
   const [backupExportOpen, setBackupExportOpen] = useState(false);
   const [backupImport, setBackupImport] = useState<{ name: string; text: string } | null>(null);
   const [batchOpen, setBatchOpen] = useState(false);
@@ -507,6 +509,7 @@ export default function App() {
         onPrefixPolicy={() => setPrefixPolicyOpen(true)}
         onAddressAudit={() => setAddressAuditOpen(true)}
         onRouteSummary={() => setRouteSummaryOpen(true)}
+        onPlanDiff={() => setPlanDiffOpen(true)}
       />
 
       {toast && (
@@ -604,6 +607,10 @@ export default function App() {
 
       {routeSummaryOpen && (
         <RouteSummaryModal plan={plan} onClose={() => setRouteSummaryOpen(false)} />
+      )}
+
+      {planDiffOpen && (
+        <PlanDiffModal plan={plan} onClose={() => setPlanDiffOpen(false)} />
       )}
 
       {backupExportOpen && (

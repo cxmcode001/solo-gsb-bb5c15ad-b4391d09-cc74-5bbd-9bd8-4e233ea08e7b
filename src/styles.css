@@ -446,6 +446,73 @@ code,
   color: var(--muted);
 }
 
+.badge.diff-added {
+  background: rgba(52, 201, 142, 0.15);
+  color: var(--green);
+}
+
+.badge.diff-removed {
+  background: rgba(229, 96, 94, 0.18);
+  color: var(--red);
+}
+
+.badge.diff-renamed {
+  background: rgba(79, 140, 255, 0.18);
+  color: #8db4ff;
+}
+
+.badge.diff-kind {
+  background: rgba(186, 130, 255, 0.18);
+  color: #c9a0ff;
+}
+
+.badge.diff-moved {
+  background: rgba(232, 185, 63, 0.15);
+  color: var(--yellow);
+}
+
+.badge.diff-capacity {
+  background: rgba(94, 200, 220, 0.15);
+  color: #7fd4e8;
+}
+
+.diff-file-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.diff-addr-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.diff-addr-head {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.diff-cidr-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.diff-cidr-list code {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
 /* ---- 表格 ---- */
 .table-wrap {
   overflow-x: auto;

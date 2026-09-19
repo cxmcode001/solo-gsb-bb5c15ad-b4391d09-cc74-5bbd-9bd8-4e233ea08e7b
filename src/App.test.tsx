@@ -5,6 +5,7 @@ import App from './App';
 import BatchApplyModal from './components/BatchApplyModal';
 import StaticHostsModal from './components/StaticHostsModal';
 import RouteSummaryModal from './components/RouteSummaryModal';
+import PlanDiffModal from './components/PlanDiffModal';
 import { Allocation, Plan } from './lib/model';
 
 describe('App 冒烟测试', () => {
@@ -17,6 +18,7 @@ describe('App 冒烟测试', () => {
     expect(html).toContain('批量申请');
     expect(html).toContain('前缀策略校验');
     expect(html).toContain('路由汇总');
+    expect(html).toContain('规划差异报告');
     expect(html).toContain('加密导出');
     expect(html).toContain('加密导入');
   });
@@ -87,5 +89,23 @@ describe('RouteSummaryModal 冒烟测试', () => {
     expect(html).toContain('保留乙');
     expect(html).toContain('不可选，汇总 CIDR 不得覆盖');
     expect(html).toContain('生成汇总方案');
+  });
+});
+
+describe('PlanDiffModal 冒烟测试', () => {
+  const plan: Plan = {
+    version: 1,
+    roots: [{ id: 'r1', name: '生产', cidr: '10.0.0.0/16' }],
+    allocations: [{ id: 'a1', name: '子网甲', kind: 'subnet', prefix: 24, cidr: '10.0.0.0/24' }],
+  };
+
+  it('弹窗渲染：文件选择与生成入口，初始无结果且生成按钮禁用', () => {
+    const html = renderToString(
+      createElement(PlanDiffModal, { plan, onClose: () => undefined }),
+    );
+    expect(html).toContain('规划差异报告');
+    expect(html).toContain('选择基线文件');
+    expect(html).toContain('尚未选择基线文件');
+    expect(html).toMatch(/disabled[^>]*>\s*生成差异报告/);
   });
 });
